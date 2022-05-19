@@ -11,6 +11,11 @@ public class refere : MonoBehaviour
     [SerializeField]
     private GameObject player2;
 
+    [SerializeField]
+    private GameObject restart_button;
+
+    [SerializeField]
+    private GameObject menu_button;
 
     [SerializeField]
     private GameObject Cong1;
@@ -32,6 +37,7 @@ public class refere : MonoBehaviour
         if (player == player2)
             Cong1.SetActive(true);
         yield return new WaitForSeconds(3f);
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        restart_button.SetActive(true);
+        menu_button.SetActive(true);
     }
 }

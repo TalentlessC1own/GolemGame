@@ -63,7 +63,7 @@ public class arena : MonoBehaviour
         player1_golem.Attack();
         player2_golem.Attack();
 
-        yield return new WaitForSeconds(1);
+        yield return new WaitForSeconds(0.8f);
         DefineWinner();
 
     }
@@ -74,14 +74,16 @@ public class arena : MonoBehaviour
         {
             case 1:
                 player1_golem.Die();
-                yield return new WaitForSeconds(1);
-                player2_golem.ThrowWepon();
+                yield return new WaitForSeconds(0.8f);
+                player2_golem.RangeAttack();
+                yield return new WaitForSeconds(1f);
                 player2_golem.Die();
                 break;
             case 2:
                 player2_golem.Die();
-                yield return new WaitForSeconds(1);
-                player1_golem.ThrowWepon();
+                yield return new WaitForSeconds(1f);
+                player1_golem.RangeAttack();
+                yield return new WaitForSeconds(0.8f);
                 player1_golem.Die();
                 break;
         }

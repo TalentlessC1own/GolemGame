@@ -12,6 +12,10 @@ public class golem : MonoBehaviour
     private SpriteRenderer sprite;
 
     private wing_wepon wood_wepon;
+    private wing_wepon axe_wepom;
+    private wing_wepon dubinka_wepom;
+
+    private wing_wepon selected_wepon;
 
     public bool Sprite
     {
@@ -22,12 +26,19 @@ public class golem : MonoBehaviour
         get { return (GolemState)animator.GetInteger("state"); }
         set { animator.SetInteger("state", (int)value); }
     }
+
+    private void Start()
+    {
+        SelectWeapon();
+    }
     private void Awake()
     {
         animator = GetComponent<Animator>();
         sprite = GetComponentInChildren<SpriteRenderer>();
         wood_wepon = Resources.Load<wing_wepon>("Wood");
-    }
+        axe_wepom = Resources.Load<wing_wepon>("Axe");
+        dubinka_wepom = Resources.Load<wing_wepon>("Dubinka");
+    } 
     private void Update()
     {
         if (!attacking && !die)
@@ -36,26 +47,58 @@ public class golem : MonoBehaviour
 
     private IEnumerator AttackAnim()
     {
+        state = GolemState.attack;
         attacking = true;
-        yield return new WaitForSeconds(1.5f);
+        yield return new WaitForSeconds(0.8f);
+        attacking = false;
+    }
+    private IEnumerator RangeAttackAnim()
+    {
+        state = GolemState.range_attack;
+        attacking = true;
+        yield return new WaitForSeconds(0.8f);
+        ThrowWepon();
         attacking = false;
     }
 
-    public void ThrowWepon()
+    private void  SelectWeapon()
     {
-        Vector3 position = transform.position; position.x +=  sprite.flipX ? 0.5f : -0.5f;
-        wing_wepon Newthrow_wepon =  Instantiate(wood_wepon, position, wood_wepon.transform.rotation) as wing_wepon;
+        switch (gameObject.name)
+        {
+            case "StoneGolem(Clone)":
+                selected_wepon = dubinka_wepom;
+                break;
+            case "EarthGolem(Clone)":
+                selected_wepon = axe_wepom;
+                break;
+            case "WoodGolem(Clone)":
+                selected_wepon =wood_wepon;
+                break;
+
+        }
+    }
+    public void RangeAttack()
+    {
+        StartCoroutine(RangeAttackAnim());
+    }
+    private void ThrowWepon()
+    {
+        Vector3 position = transform.position; position.x +=  sprite.flipX ? -1.5f : 1.5f;
+        wing_wepon Newthrow_wepon =  Instantiate(selected_wepon, position, wood_wepon.transform.rotation) as wing_wepon;
         Newthrow_wepon.Direction = Newthrow_wepon.transform.right * (sprite.flipX ? -1.0f : 1.0f);
     }
     public void Attack()
     {
-        state = GolemState.attack;
+        StartCoroutine(AttackAnim());
     }
    public  void Die()
     {
         die = true;
+        
         state = GolemState.die;
-        Destroy(gameObject, 1.1f);
+       
+        
+        Destroy(gameObject, 1.5f);
     }
 
 }
@@ -63,5 +106,7 @@ public enum GolemState
 {
     idle,
     attack,
-    die
+    die,
+    range_attack,
+    
 }
