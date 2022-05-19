@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class golem : MonoBehaviour
 {
+    private bool have_wepon = true;
     private bool attacking = false;
     private bool die = false;
 
@@ -41,7 +42,7 @@ public class golem : MonoBehaviour
     } 
     private void Update()
     {
-        if (!attacking && !die)
+        if (!attacking && !die && have_wepon)
             state = GolemState.idle;
     }
 
@@ -54,6 +55,7 @@ public class golem : MonoBehaviour
     }
     private IEnumerator RangeAttackAnim()
     {
+        have_wepon = false;
         state = GolemState.range_attack;
         attacking = true;
         yield return new WaitForSeconds(0.8f);
