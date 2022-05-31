@@ -1,52 +1,97 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class SpawnGolem : MonoBehaviour
 {
-    private golem StoneGolem;
-    private golem WoodGolem;
-    private golem EarthGolem;
+    private Golem StoneGolem;
+    private Golem WoodGolem;
+    private Golem EarthGolem;
 
-    GameObject spawner;
+    private GameObject WoodHead;
+    private GameObject EarthHead;
+    private GameObject StoneHead;
+
+    
+
+    Vector3 position_golem_1 = new Vector3(-2.13f, -1.15f, 1);
+    Vector3 position_golem_2 = new Vector3(1.82f, -1.15f, 0);
+
     Vector3 position;
 
-    private golem selected_golem;
+    private Golem selected_golem;
+
+    private GameObject selected_head;
     private void Awake()
     {
-        StoneGolem = Resources.Load<golem>("StoneGolem");
-        WoodGolem = Resources.Load<golem>("WoodGolem");
-        EarthGolem = Resources.Load<golem>("EarthGolem");
+        StoneGolem = Resources.Load<Golem>("StoneGolem");
+        WoodGolem = Resources.Load<Golem>("WoodGolem");
+        EarthGolem = Resources.Load<Golem>("EarthGolem");
+        WoodHead = Resources.Load<GameObject>("WoodHead");
+        EarthHead = Resources.Load<GameObject>("EarthHead");
+        StoneHead = Resources.Load<GameObject>(" StoneHead");
     }
     private void Start()
     {
-        spawner = gameObject;
-        position = transform.position;
+        position = transform.localPosition;
     }
-    
+
+    private void Update()
+    {
+        position = transform.localPosition;
+        Debug.Log(position);
+    }
     private void  SelectGolem(Golems golem_type)
     {
         switch (golem_type)
         {
             case Golems.StoneGolem:
+                selected_head = StoneHead;
                 selected_golem = StoneGolem;
                 break;
             case Golems.WoodGolem:
+                selected_head = WoodHead;
                 selected_golem = WoodGolem;
                 break;
             case Golems.EarthGolem:
-                selected_golem=EarthGolem;
+                selected_head = EarthHead;
+                selected_golem = EarthGolem;
                 break;
         }
     }
-    public golem CreateGolem(Golems golem_type)
+
+    public void CreateGolemHead(Golems golem_type)
+    {
+        SelectGolem(golem_type);
+        if (gameObject.name == "SpawnGolemPlayer2" && selected_head != null)
+        {
+            Instantiate(selected_head, position_golem_2, Quaternion.identity);
+        }
+        else if(gameObject.name == "SpawnGolemPlayer2" && selected_head != null)
+        {
+            Instantiate(selected_head, position_golem_1, Quaternion.identity);
+        }
+    }
+   public Golem CreateGolem(Golems golem_type)
    {
         SelectGolem(golem_type);
         
-        golem newGolem = Instantiate(selected_golem, position,Quaternion.identity) as golem;
+        Golem newGolem = Instantiate(selected_golem, position,Quaternion.identity) as Golem;
 
-        if (spawner.name == "SpawnGolemPlayer2")
-            newGolem.Sprite = true;
+        if (gameObject.name == "SpawnGolemPlayer2")
+        {
+            newGolem.GolemRotate();
+            newGolem.GetComponent<GolemController>().controller = Controller.player_2;
+            
+            newGolem.transform.position = position_golem_2;
+        }
+        else
+        {
+            newGolem.transform.position = position_golem_1;
+        }
+       
+       
         return newGolem;
     }
 }

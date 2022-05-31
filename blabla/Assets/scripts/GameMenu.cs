@@ -5,12 +5,17 @@ using UnityEngine.SceneManagement;
 
 public class GameMenu : MonoBehaviour
 {
+    [SerializeField]
+    private LevelChanger levelChanger;
     public void Restart()
     {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        levelChanger.FadeToLevel(SceneManager.GetActiveScene().buildIndex); ;
+        DataHolder.player_1_lives = 3;
+        DataHolder.player_2_lives = 3;
+        DataHolder.was_fight = false;
     }
     public void GoTOMainMenu()
     {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex - 1);
+        levelChanger.FadeToLevel(0);
     }
 }

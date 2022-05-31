@@ -12,6 +12,9 @@ public class refere : MonoBehaviour
     private GameObject player2;
 
     [SerializeField]
+    private arena arena;
+
+    [SerializeField]
     private GameObject restart_button;
 
     [SerializeField]
@@ -31,12 +34,16 @@ public class refere : MonoBehaviour
 
     private IEnumerator Delay(GameObject player)
     {
-        yield return new WaitForSeconds(2f);
+        arena.enabled = false;
+        yield return new WaitForSecondsRealtime(1.5f);
+       // Time.timeScale = 0;
+       
+        yield return new WaitForSecondsRealtime(1.5f);
         if (player == player1)
             Cong2.SetActive(true);
         if (player == player2)
             Cong1.SetActive(true);
-        yield return new WaitForSeconds(3f);
+        yield return new WaitForSecondsRealtime(2f);
         restart_button.SetActive(true);
         menu_button.SetActive(true);
     }

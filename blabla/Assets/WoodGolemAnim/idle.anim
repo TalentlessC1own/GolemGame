@@ -6,7 +6,7 @@ AnimationClip:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: idle
+  m_Name: Idle
   serializedVersion: 6
   m_Legacy: 0
   m_Compressed: 0
@@ -21,27 +21,29 @@ AnimationClip:
   - curve:
     - time: 0
       value: {fileID: 21300000, guid: 1eead511e1b8e6d47af98703822c1d00, type: 3}
-    - time: 0.083333336
+    - time: 0.016666668
+      value: {fileID: 21300000, guid: 1eead511e1b8e6d47af98703822c1d00, type: 3}
+    - time: 0.1
       value: {fileID: 21300000, guid: 8296575c214de4843a273b1b377c5a38, type: 3}
-    - time: 0.16666667
+    - time: 0.18333334
       value: {fileID: 21300000, guid: f8959c2e131a4114db4d57a513e68305, type: 3}
-    - time: 0.25
+    - time: 0.28333333
       value: {fileID: 21300000, guid: fbe7df2bbd935bc4780bf38ac4fe5242, type: 3}
-    - time: 0.33333334
+    - time: 0.36666667
       value: {fileID: 21300000, guid: 79207ad148cbfaf459633e370a4ee5b3, type: 3}
-    - time: 0.41666666
+    - time: 0.45
       value: {fileID: 21300000, guid: fc5b44cb3011b4b41a10d9f61d73c64c, type: 3}
-    - time: 0.5
+    - time: 0.53333336
       value: {fileID: 21300000, guid: ad257acd946410c4aa3710892e7f3f1d, type: 3}
-    - time: 0.5833333
+    - time: 0.6166667
       value: {fileID: 21300000, guid: 19501a9dbb8e44941bb0d700e3c94ced, type: 3}
-    - time: 0.6666667
+    - time: 0.7
       value: {fileID: 21300000, guid: 97f35479ebc288845a0f118a24fa0449, type: 3}
-    - time: 0.75
+    - time: 0.8
       value: {fileID: 21300000, guid: ccb18c151893ee64495a3ee968f5509d, type: 3}
-    - time: 0.8333333
+    - time: 0.8833333
       value: {fileID: 21300000, guid: 2673a11451d6799468de61a34b5e689a, type: 3}
-    - time: 0.9166667
+    - time: 0.96666664
       value: {fileID: 21300000, guid: 2f10a98336593fc47b0a78390ff3e97e, type: 3}
     - time: 1
       value: {fileID: 21300000, guid: 1eead511e1b8e6d47af98703822c1d00, type: 3}
@@ -64,6 +66,7 @@ AnimationClip:
       customType: 23
       isPPtrCurve: 1
     pptrCurveMapping:
+    - {fileID: 21300000, guid: 1eead511e1b8e6d47af98703822c1d00, type: 3}
     - {fileID: 21300000, guid: 1eead511e1b8e6d47af98703822c1d00, type: 3}
     - {fileID: 21300000, guid: 8296575c214de4843a273b1b377c5a38, type: 3}
     - {fileID: 21300000, guid: f8959c2e131a4114db4d57a513e68305, type: 3}

@@ -2,113 +2,164 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class golem : MonoBehaviour
+public class Golem :Unit
 {
-    private bool have_wepon = true;
-    private bool attacking = false;
+    [SerializeField]
+    private HealthBar healthBar;
+
+    [SerializeField]
+    private GameObject healthBarObject;
+
     private bool die = false;
 
-    private Animator animator;
+    private bool attacking = false;
 
+    [SerializeField]
+    private int lives = 3;
+
+    [SerializeField]
+    private float speed = 3.0F;
+    [SerializeField]
+    private float jumpForce = 10F;
+
+
+    private bool isGrounded = false;
+
+    public bool IsGrounded
+    { get { return isGrounded; } }
+
+    public GolemStates State
+    {
+        get { return (GolemStates)animator.GetInteger("State"); }
+        set { animator.SetInteger("State", (int)value); }
+
+    }
+
+    private Animator animator;
+    new private Rigidbody2D rigidbody;
     private SpriteRenderer sprite;
 
-    private wing_wepon wood_wepon;
-    private wing_wepon axe_wepom;
-    private wing_wepon dubinka_wepom;
-
-    private wing_wepon selected_wepon;
-
-    public bool Sprite
+    public void Run(float axis)
     {
-        set { sprite.flipX = value; }
+        if (attacking) return;
+        if (isGrounded) State = GolemStates.Run;
+        Vector3 direction = transform.right * axis * PlayerFlip();
+        transform.position = Vector3.MoveTowards(transform.position, transform.position + direction , speed * Time.deltaTime);
+        if (direction.x < 0)
+            transform.localScale = new Vector3(PlayerFlip() * -1.0f, 1.0f, 1.0f);
+        if (direction.x > 0)
+            transform.localScale = new Vector3(PlayerFlip(), 1.0f, 1.0f);
+
     }
-    private GolemState state
+
+    private float PlayerFlip()
     {
-        get { return (GolemState)animator.GetInteger("state"); }
-        set { animator.SetInteger("state", (int)value); }
+        if (GetComponent<GolemController>().controller == Controller.player_2) 
+            return -1.0f;
+        else
+            return 1.0f;
     }
 
     private void Start()
     {
-        SelectWeapon();
+        healthBar.SetMaxHealth(lives);
     }
     private void Awake()
     {
         animator = GetComponent<Animator>();
+        rigidbody = GetComponent<Rigidbody2D>();
         sprite = GetComponentInChildren<SpriteRenderer>();
-        wood_wepon = Resources.Load<wing_wepon>("Wood");
-        axe_wepom = Resources.Load<wing_wepon>("Axe");
-        dubinka_wepom = Resources.Load<wing_wepon>("Dubinka");
-    } 
-    private void Update()
-    {
-        if (!attacking && !die && have_wepon)
-            state = GolemState.idle;
     }
 
-    private IEnumerator AttackAnim()
+    private void OnBecameInvisible()
     {
-        state = GolemState.attack;
-        attacking = true;
-        yield return new WaitForSeconds(0.8f);
-        attacking = false;
+        gameObject.GetComponent<Golem>().Die();
+        Destroy(gameObject);
     }
-    private IEnumerator RangeAttackAnim()
+    private IEnumerator AttackCd()
     {
-        have_wepon = false;
-        state = GolemState.range_attack;
         attacking = true;
-        yield return new WaitForSeconds(0.8f);
-        ThrowWepon();
+        yield return new WaitForSeconds(1f);
         attacking = false;
     }
 
-    private void  SelectWeapon()
+    private IEnumerator DestroyDelay()
     {
-        switch (gameObject.name)
-        {
-            case "StoneGolem(Clone)":
-                selected_wepon = dubinka_wepom;
-                break;
-            case "EarthGolem(Clone)":
-                selected_wepon = axe_wepom;
-                break;
-            case "WoodGolem(Clone)":
-                selected_wepon =wood_wepon;
-                break;
+        yield return new WaitForSeconds(3f);
+        Destroy(gameObject);
+    }
 
-        }
-    }
-    public void RangeAttack()
+    public void OnHealthBar()
     {
-        StartCoroutine(RangeAttackAnim());
+        healthBarObject.SetActive(true);
     }
-    private void ThrowWepon()
+    public void Jump()
     {
-        Vector3 position = transform.position; position.x +=  sprite.flipX ? -1.5f : 1.5f;
-        wing_wepon Newthrow_wepon =  Instantiate(selected_wepon, position, wood_wepon.transform.rotation) as wing_wepon;
-        Newthrow_wepon.Direction = Newthrow_wepon.transform.right * (sprite.flipX ? -1.0f : 1.0f);
+        if(attacking) return;
+        rigidbody.AddForce(transform.up * jumpForce, ForceMode2D.Impulse);
     }
+
+    public void GolemRotate()
+    {
+       gameObject.transform.Rotate(0, 180, 0);
+    }
+
     public void Attack()
     {
-        StartCoroutine(AttackAnim());
+        if (!isGrounded) return;
+        animator.SetTrigger("Attack");
+        StartCoroutine(AttackCd());
+
     }
-   public  void Die()
+
+    private void FixedUpdate()
+    { 
+        CheckGround();
+        animator.SetBool("isGrounded", isGrounded);
+    }
+
+    private void Update()
+    {
+        if (lives <= 0) Die();
+        if (Input.GetKeyDown(KeyCode.Space))
+            ReciveDamage();
+    }
+
+    private void CheckGround()
+    {
+        Collider2D[] colliders = Physics2D.OverlapCircleAll(transform.position, 0.3F);
+
+        isGrounded = colliders.Length > 1;
+
+    }
+
+    public void Die()
     {
         die = true;
+        healthBar.Off();
+        animator.SetBool("Die", true);
+        rigidbody.bodyType = RigidbodyType2D.Static;
+        GetComponent<GolemController>().enabled = false;
+        GetComponent<Collider2D>().enabled = false;
+    }
+    public bool IsDie()
+    {
+        return die;
+    }
+    
+    override public void ReciveDamage()
+    {
         
-        state = GolemState.die;
-       
-        
-        Destroy(gameObject, 1.5f);
+        animator.SetTrigger("TakeDamage");
+        lives--;
+        healthBar.SetHealth(lives);
+        Debug.Log(lives);
     }
 
 }
-public enum GolemState
+
+public enum GolemStates
 {
-    idle,
-    attack,
-    die,
-    range_attack,
-    
+    Idle,
+    Run
 }

@@ -25,11 +25,11 @@ public class wing_wepon : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-       player unit = collision.GetComponent<player>();
+       Unit unit = collision.GetComponent<Unit>();
 
         if(unit)
         {
-            unit.TakeDamage();
+            unit.ReciveDamage();
             Destroy(gameObject);
         }
     }

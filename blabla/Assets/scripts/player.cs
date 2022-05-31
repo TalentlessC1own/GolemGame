@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class player : MonoBehaviour
+public class player : Unit
 {
 
     private bool taking_damage = false;
@@ -29,7 +29,7 @@ public class player : MonoBehaviour
 
     private Animator animator;
 
-    public bool player_ready;
+    public bool player_ready { get; set; }
 
     private bool fighting = false;
     
@@ -42,7 +42,18 @@ public class player : MonoBehaviour
     private void Start()
     {
         player_ready = false;
-        healthBar.SetMaxHealth(lives);
+        if (player_number == players.player1)
+        {
+            lives = DataHolder.player_1_lives;
+            
+        }
+        if (player_number == players.player2)
+        {
+            lives = DataHolder.player_2_lives;
+        }
+        healthBar.SetMaxHealth(3);
+        healthBar.SetHealth(lives);
+
     }
     private void Awake()
     {
@@ -51,10 +62,20 @@ public class player : MonoBehaviour
 
     void Update()
     {
-        if(!taking_damage && !die && !casting)
+        if (fighting)
+            IconPanel.IconOff();
+        if (!fighting && !player_ready)
+            IconPanel.IconOn();
+        if (player_number == players.player1)
+            DataHolder.player_1_lives = lives;
+
+        if (player_number == players.player2)
+            DataHolder.player_2_lives = lives;
+
+        if (!taking_damage && !die && !casting)
             state = PlayerState.idle;
        
-        if(lives == 0)
+        if(lives <= 0)
             Die();
         if (player_number == players.player1 && !player_ready && !die && !fighting)
         {
@@ -100,10 +121,6 @@ public class player : MonoBehaviour
             }
         }
 
-        if (Input.GetKeyDown(KeyCode.K) )
-        {
-            player_ready = true;
-        }
     }
 
     private IEnumerator TakeDamageAnim()
@@ -112,21 +129,16 @@ public class player : MonoBehaviour
         lives--;
         healthBar.SetHealth(lives);
         state = PlayerState.takedamage;
+        _arena.KillAllGolem();
         yield return new WaitForSeconds(1f);
         taking_damage = false;
     }
-    public void Fight()
+    public void Fight(bool fighting_ )
     {
-        StartCoroutine(FightingTime());
+        fighting = fighting_;
     }
-    private IEnumerator FightingTime()
-    {
-        fighting = true;
-        yield return new WaitForSeconds(10f);
-        fighting = false;
-        IconPanel.IconOn();
-    }
-        private IEnumerator CastAnim()
+   
+    private IEnumerator CastAnim()
     {
         casting = true;
         state = PlayerState.cast;
@@ -147,7 +159,7 @@ public class player : MonoBehaviour
         Destroy(gameObject,1);
     }
 
-    public void TakeDamage()
+    override public void ReciveDamage()
     {
         StartCoroutine(TakeDamageAnim());
        
@@ -156,7 +168,7 @@ public class player : MonoBehaviour
     
 }
 
-public enum players { player1, player2 };
+public enum players { player1, player2,none };
 public enum PlayerState
 {
     idle,

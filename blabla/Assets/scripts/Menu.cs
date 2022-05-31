@@ -5,8 +5,13 @@ using UnityEngine.SceneManagement;
 
 public class Menu : MonoBehaviour
 {
+    [SerializeField]
+    LevelChanger levelChanger;
     public void Play()
     {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+        levelChanger.FadeToLevel(1);
+        DataHolder.player_1_lives = 3;
+        DataHolder.player_2_lives = 3;
+        DataHolder.was_fight = false;
     }
 }
