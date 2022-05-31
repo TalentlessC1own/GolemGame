@@ -12,6 +12,8 @@ public class LevelChanger : MonoBehaviour
     private void Start()
     {
         animator = GetComponent<Animator>();
+
+        DataHolder.pause = false;
     }
 
     public void FadeToLevel(int level )

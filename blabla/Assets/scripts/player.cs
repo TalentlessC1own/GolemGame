@@ -66,18 +66,14 @@ public class player : Unit
             IconPanel.IconOff();
         if (!fighting && !player_ready)
             IconPanel.IconOn();
-        if (player_number == players.player1)
-            DataHolder.player_1_lives = lives;
-
-        if (player_number == players.player2)
-            DataHolder.player_2_lives = lives;
+       
 
         if (!taking_damage && !die && !casting)
             state = PlayerState.idle;
        
         if(lives <= 0)
             Die();
-        if (player_number == players.player1 && !player_ready && !die && !fighting)
+        if (player_number == players.player1 && !player_ready && !die && !fighting && !DataHolder.pause)
         {
             if (Input.GetKeyDown(KeyCode.Q))
             {
@@ -99,7 +95,7 @@ public class player : Unit
             }
         }
 
-        if (player_number == players.player2 && !player_ready && !die && !fighting)
+        if (player_number == players.player2 && !player_ready && !die && !fighting && !DataHolder.pause)
         {
             if (Input.GetKeyDown(KeyCode.K))
             {
@@ -128,6 +124,15 @@ public class player : Unit
         taking_damage = true;
         lives--;
         healthBar.SetHealth(lives);
+        if (player_number == players.player1)
+        {
+            DataHolder.player_1_lives = lives; 
+
+        }
+        if (player_number == players.player2)
+        {
+            DataHolder.player_2_lives = lives;
+        }
         state = PlayerState.takedamage;
         _arena.KillAllGolem();
         yield return new WaitForSeconds(1f);

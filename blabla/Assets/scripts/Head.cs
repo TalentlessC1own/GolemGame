@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Head : MonoBehaviour
+public class Head : Unit
 {
    
 }

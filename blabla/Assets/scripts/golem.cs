@@ -121,13 +121,11 @@ public class Golem :Unit
     private void Update()
     {
         if (lives <= 0) Die();
-        if (Input.GetKeyDown(KeyCode.Space))
-            ReciveDamage();
     }
 
     private void CheckGround()
     {
-        Collider2D[] colliders = Physics2D.OverlapCircleAll(transform.position, 0.3F);
+        Collider2D[] colliders = Physics2D.OverlapCircleAll(transform.position, 0.5F);
 
         isGrounded = colliders.Length > 1;
 

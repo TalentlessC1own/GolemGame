@@ -30,7 +30,7 @@ public class SpawnGolem : MonoBehaviour
         EarthGolem = Resources.Load<Golem>("EarthGolem");
         WoodHead = Resources.Load<GameObject>("WoodHead");
         EarthHead = Resources.Load<GameObject>("EarthHead");
-        StoneHead = Resources.Load<GameObject>(" StoneHead");
+        StoneHead = Resources.Load<GameObject>("StoneHead");
     }
     private void Start()
     {
@@ -68,7 +68,7 @@ public class SpawnGolem : MonoBehaviour
         {
             Instantiate(selected_head, position_golem_2, Quaternion.identity);
         }
-        else if(gameObject.name == "SpawnGolemPlayer2" && selected_head != null)
+        if (gameObject.name == "SpawnGolemPlayer1" && selected_head != null)
         {
             Instantiate(selected_head, position_golem_1, Quaternion.identity);
         }

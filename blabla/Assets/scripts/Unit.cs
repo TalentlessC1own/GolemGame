@@ -6,4 +6,5 @@ public class Unit : MonoBehaviour
 {
     virtual public void ReciveDamage()
     { }
+
 }

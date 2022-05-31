@@ -9,6 +9,7 @@ public class GameMenu : MonoBehaviour
     private LevelChanger levelChanger;
     public void Restart()
     {
+        Time.timeScale = 1;
         levelChanger.FadeToLevel(SceneManager.GetActiveScene().buildIndex); ;
         DataHolder.player_1_lives = 3;
         DataHolder.player_2_lives = 3;
@@ -16,6 +17,7 @@ public class GameMenu : MonoBehaviour
     }
     public void GoTOMainMenu()
     {
+        Time.timeScale = 1;
         levelChanger.FadeToLevel(0);
     }
 }

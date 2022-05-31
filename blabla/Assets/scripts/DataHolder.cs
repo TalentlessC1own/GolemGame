@@ -16,4 +16,7 @@ public static class DataHolder
     public static players pre_winner { get; set; }
 
     public static bool was_fight = false;
+
+
+    public static bool pause = false;
 }
