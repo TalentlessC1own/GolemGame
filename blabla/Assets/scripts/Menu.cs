@@ -14,4 +14,9 @@ public class Menu : MonoBehaviour
         DataHolder.player_2_lives = 3;
         DataHolder.was_fight = false;
     }
+
+    public void Exit()
+    {
+      Application.Quit();
+    }
 }

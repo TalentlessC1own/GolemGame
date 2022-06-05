@@ -41,14 +41,16 @@ public class Golem :Unit
 
     public void Run(float axis)
     {
-        if (attacking) return;
-        if (isGrounded) State = GolemStates.Run;
-        Vector3 direction = transform.right * axis * PlayerFlip();
-        transform.position = Vector3.MoveTowards(transform.position, transform.position + direction , speed * Time.deltaTime);
-        if (direction.x < 0)
-            transform.localScale = new Vector3(PlayerFlip() * -1.0f, 1.0f, 1.0f);
-        if (direction.x > 0)
-            transform.localScale = new Vector3(PlayerFlip(), 1.0f, 1.0f);
+        if (!attacking)
+        {
+            if (isGrounded) State = GolemStates.Run;
+            Vector3 direction = transform.right * axis * PlayerFlip();
+            transform.position = Vector3.MoveTowards(transform.position, transform.position + direction, speed * Time.deltaTime);
+            if (direction.x < 0)
+                transform.localScale = new Vector3(PlayerFlip() * -1.0f, 1.0f, 1.0f);
+            if (direction.x > 0)
+                transform.localScale = new Vector3(PlayerFlip(), 1.0f, 1.0f);
+        }
 
     }
 
@@ -106,9 +108,11 @@ public class Golem :Unit
 
     public void Attack()
     {
-        if (!isGrounded) return;
-        animator.SetTrigger("Attack");
-        StartCoroutine(AttackCd());
+        if (isGrounded && !attacking)
+        {
+            animator.SetTrigger("Attack");
+            StartCoroutine(AttackCd());
+        }
 
     }
 
